@@ -8,6 +8,7 @@ class HTTPServer {
     constructor(fuse) {
         this.fuse = fuse;
         this.app = express();
+        this.server = http.createServer();
     }
     static start(opts, fuse) {
         let server = new HTTPServer(fuse);
@@ -17,9 +18,7 @@ class HTTPServer {
     launch(opts, userSettings) {
         this.opts = opts || {};
         const port = this.opts.port || 4444;
-        let server = http.createServer();
-        this.server = server;
-        SocketServer_1.SocketServer.createInstance(server, this.fuse);
+        SocketServer_1.SocketServer.createInstance(this.server, this.fuse);
         this.setup();
         if (userSettings && userSettings.proxy) {
             let proxyInstance;
@@ -37,9 +36,9 @@ class HTTPServer {
                 this.fuse.context.log.echoWarning("You are using development proxy but 'http-proxy-middleware' was not installed");
             }
         }
-        server.on("request", this.app);
+        this.server.on("request", this.app);
         setTimeout(() => {
-            server.listen(port, () => {
+            this.server.listen(port, () => {
                 const msg = `
 ---------------------------------------------------
 Development server running http://localhost:${port}

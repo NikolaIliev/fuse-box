@@ -30,15 +30,14 @@ export class HTTPServer {
 
     constructor(private fuse: FuseBox) {
         this.app = express();
+        this.server = http.createServer();
     }
 
     // @TODO: should add .stop()
     public launch(opts: HTTPServerOptions, userSettings?: ServerOptions): void {
         this.opts = opts || {};
         const port = this.opts.port || 4444;
-        let server = http.createServer();
-        this.server = server
-        SocketServer.createInstance(server, this.fuse);
+        SocketServer.createInstance(this.server, this.fuse);
         this.setup();
 
 
@@ -59,9 +58,9 @@ export class HTTPServer {
 
         }
 
-        server.on("request", this.app);
+        this.server.on("request", this.app);
         setTimeout(() => {
-            server.listen(port, () => {
+            this.server.listen(port, () => {
                 const msg = `
 ---------------------------------------------------
 Development server running http://localhost:${port}
