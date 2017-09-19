@@ -25,6 +25,7 @@ export class HTTPServer {
     }
 
     public app: any;
+    public server: any;
     public opts: HTTPServerOptions;
 
     constructor(private fuse: FuseBox) {
