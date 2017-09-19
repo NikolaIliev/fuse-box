@@ -36,6 +36,7 @@ export class HTTPServer {
         this.opts = opts || {};
         const port = this.opts.port || 4444;
         let server = http.createServer();
+        this.server = server
         SocketServer.createInstance(server, this.fuse);
         this.setup();
 
